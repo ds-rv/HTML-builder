@@ -10,33 +10,33 @@ const stdin = process.stdin;
 fs.writeFile(
   fileUrl,
   '',
-  { flag: 'a+' },
+  { flag: 'w+' },
   (err) => {
     if (err !== null) {
       console.log(err.name + ': ' + err.message);
     }
+
+    const rl = readline.createInterface({ input: stdin, output: stdout });
+
+    rl.on('close', () => {
+      console.log('Bye!');
+    });
+
+    rl.on('line', (input) => {
+      if (input.toString().toLowerCase().trim() == 'exit') {
+        rl.close();
+      } else {
+        fs.appendFile(
+          fileUrl,
+          input + '\n',
+          (err) => {
+            if (err !== null) {
+              console.log(err.name + ': ' + err.message);
+            }
+          });
+      }
+    });
+
+    console.log('Enter your text:');
   }
 );
-
-const rl = readline.createInterface({ input: stdin, output: stdout });
-
-rl.on('close', () => {
-  console.log('Bye!');
-});
-
-rl.on('line', (input) => {
-  if (input.toString().toLowerCase().trim() == 'exit') {
-    rl.close();
-  } else {
-    fs.appendFile(
-      fileUrl,
-      input,
-      (err) => {
-        if (err !== null) {
-          console.log(err.name + ': ' + err.message);
-        }
-      });
-  }
-});
-
-console.log('Enter your text:');
